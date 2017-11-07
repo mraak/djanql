@@ -1,3 +1,61 @@
+Sample application showcasing Django and GraphQL.
+
+
+# Run
+
+```
+python3 -m venv _venv
+source _venv/bin/activate
+pip install -r requirements.txt
+python3 manage.py migrate
+python3 manage.py createsuperuser
+python3 manage.py runserver
+
+```
+
+
+
+
+
+http://127.0.0.1:8000/admin
+
+Log in with your superuser and create some models.
+
+http://127.0.0.1:8000/graphql
+
+Run queries and mutations.
+
+
+## Create users and Login mutation
+
+
+```
+
+mutation{
+  createUser(username:"user", email:"user@example.com", password:"123456A!"){
+    user{
+      id
+      username
+      email
+      token
+    }
+  }
+}
+
+{
+  "data": {
+    "createUser": {
+      "user": {
+        "id": "2",
+        "username": "alenb",
+        "email": "alen.balja@pilatus-aircraft.com",
+        "token": "bbe6d60ca2295d092d30e431fc3a77573444b449"
+      }
+    }
+  }
+}
+
+
 
 mutation
 {
@@ -26,30 +84,11 @@ query{
   }
 }
 
-mutation{
-  createUser(username:"alenb", email:"alen.balja@pilatus-aircraft.com", password:"123456A!"){
-    user{
-      id
-      username
-      email
-      token
-    }
-  }
-}
+```
 
-{
-  "data": {
-    "createUser": {
-      "user": {
-        "id": "2",
-        "username": "alenb",
-        "email": "alen.balja@pilatus-aircraft.com",
-        "token": "bbe6d60ca2295d092d30e431fc3a77573444b449"
-      }
-    }
-  }
-}
+## Other mutations and queries
 
+```
 
 query viewer{
   viewer(id:"VXNlck5vZGU6Mg=="){
@@ -96,3 +135,5 @@ mutation saveorg($input:SaveOrgInput!){
 }
 
 {"input": {"orgData": {"name": "Newrg"}}}
+
+```

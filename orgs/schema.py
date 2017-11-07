@@ -34,7 +34,7 @@ class OrgNode(DjangoObjectType):
 
 class OrgInput(graphene.InputObjectType):
     org_id = String()
-    admin_id = String()(required=True)
+    admin_id = String(required=True)
     name = String(required=True)
 
 class SaveOrg(relay.ClientIDMutation):

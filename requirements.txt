@@ -1,0 +1,13 @@
+Django==1.11.5
+django-cors-headers==2.1.0
+django-filter==1.0.4
+graphene>=2.0.dev
+graphene-django>=2.0.dev
+graphql-core>=2.0.dev
+graphql-relay==0.4.5
+iso8601==0.1.11
+promise==2.0.2
+pytz==2017.2
+singledispatch==3.4.0.3
+six==1.10.0
+typing==3.6.1

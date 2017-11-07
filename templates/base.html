@@ -1,0 +1,163 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>{% block title %}Simple Login{% endblock %}</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
+  <script src="{% static 'graphql.js' %}"></script>
+  <script src="{% static 'jquery-3.2.1.min.js' %}"></script>
+  <script type="text/javascript">
+
+    var graph = graphql("/graphql")
+
+    var allProducts = graph(`query{allProducts{
+                              edges{
+                                node{
+                                  id
+                                  name
+                                  description
+                                  org{
+                                    id
+                                    name
+                                  }
+                                }
+                              }
+                            }}`)
+
+
+    var saveProductMutation = `mutation SaveProduct($input:SaveProductInput!) {
+        saveProduct(input:$input) {
+          product{
+            id
+            name
+          }
+          org{
+            id
+            name
+          }
+          updated
+        }
+      }`
+
+    var deleteProductMutation = `mutation DeleteProduct($input:DeleteProductInput!) {
+        deleteProduct(input:$input) {
+          deleteCount
+        }
+      }`
+
+
+    var saveProduct = graph(saveProductMutation)
+    var deleteProduct = graph(deleteProductMutation)
+
+
+
+    function getProductInput(){
+      var id = $("#prodId").val()
+      var name = $("#prodName").val()
+      var org = $("#orgId").val()
+      var desc = $("#prodDesc").val()
+
+      var saveProductInput = {
+                                  input:{
+                                    productData:{
+                                      productId: id,
+                                      name: name,
+                                      orgId: org,
+                                      description: desc
+                                    }
+                                  }
+                                }
+      return saveProductInput;
+    }
+    function getDeleteProductInput(){
+      var id = $("#prodId").val()
+      var deleteProductInput = {
+                                  input:{
+                                    productId: id
+                                  }
+                                }
+      return deleteProductInput;
+    }
+
+    $(function() {
+      $("#btnAddProduct").click(function(){
+        saveProduct(getProductInput()).then(function(result){
+          console.log(result);
+        })
+      })
+
+      $("#btnDeleteProduct").click(function(){
+        deleteProduct(getDeleteProductInput()).then(function(result){
+          console.log(result);
+        })
+      })
+
+    });
+
+
+
+
+    allProducts().then(function (prods) {
+      console.log("prods", prods)
+      populateProducts(prods.allProducts.edges)
+    })
+
+
+    function populateProducts(data){
+      for(var i=0; i < data.length; i++){
+        var node = data[i].node
+        console.log("item " + i + ": " + node.name)
+        var tr = $("<tr>")
+        var td = $("<td>").text(node.id).css("border", "1px solid")
+        tr.append(td)
+        td = $("<td>").text(node.name).css("border", "1px solid")
+        tr.append(td)
+        td = $("<td>").text(node.org.name).css("border", "1px solid")
+        tr.append(td)
+        $("#productsTable").append(tr)
+      }
+    }
+
+
+  </script>
+</head>
+<body>
+  <div id="jquerytest" style="padding: 10px">
+    <input id="prodName" type="text" name="" value="" placeholder="Product name"><br>
+    <input id="orgId" type="text" name="" value="" placeholder="Org Id"><br>
+    <textarea id="prodDesc" rows="4" cols="50" placeholder="Product description"></textarea><br>
+    <input id="prodId" type="text" name="" value="" placeholder="Product ID (delete / update)"><br>
+    <input id="prodPic" type="file" name="datafile" size="40"><br>
+    <button id="btnAddProduct" type="submit" name="button">Save Product</button>
+    <button id="btnDeleteProduct" type="submit" name="button">Delete Product</button>
+    <br>
+    <br>
+    <div class="">
+      <table id="productsTable" style="border:1px solid;" >
+
+      </table>
+    </div>
+  </div>
+
+  <header>
+    <h1>Simple Login</h1>
+    {% if user.is_authenticated %}
+      Hi {{ user.username }}!
+      <a href="{% url 'logout' %}">logout</a>
+    {% else %}
+      <a href="{% url 'login' %}">login</a>
+    {% endif %}
+  </header>
+  <hr>
+  <main>
+
+    {% block content %}
+    {% endblock %}
+  </main>
+  <hr>
+  <footer>
+    Terms and conditions
+  </footer>
+</body>
+</html>

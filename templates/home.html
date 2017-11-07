@@ -1,0 +1,12 @@
+
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+  {% if user.is_authenticated %}
+    <div id=app></div>
+    <script src="{% static 'app.bundle.js' %}"></script>
+  {% else %}
+    Please buy our plans
+  {% endif %}
+{% endblock %}

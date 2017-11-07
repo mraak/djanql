@@ -32,7 +32,7 @@ Run queries and mutations.
 ```
 
 mutation{
-  createUser(username:"user", email:"user@example.com", password:"123456A!"){
+  createUser(username:"user", email:"djanuser@example.com", password:"123456A!"){
     user{
       id
       username
@@ -42,24 +42,10 @@ mutation{
   }
 }
 
-{
-  "data": {
-    "createUser": {
-      "user": {
-        "id": "2",
-        "username": "alenb",
-        "email": "alen.balja@pilatus-aircraft.com",
-        "token": "bbe6d60ca2295d092d30e431fc3a77573444b449"
-      }
-    }
-  }
-}
-
-
 
 mutation
 {
-  login(username:"alenb", password:"123456A!"){
+  login(username:"djanuser", password:"123456A!"){
     user{
       id
       username
